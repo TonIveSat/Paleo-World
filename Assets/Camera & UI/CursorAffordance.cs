@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(CameraRaycaster))]
 public class CursorAffordance : MonoBehaviour
 {
     [SerializeField]
@@ -12,33 +13,29 @@ public class CursorAffordance : MonoBehaviour
     Texture2D StopCursor = null;
 
     CameraRaycaster cameraRayCaster;
-    private Layer LastLayerHit;
 
     // Use this for initialization
     void Start ()
     {
         cameraRayCaster = GetComponent<CameraRaycaster>();
+        cameraRayCaster.layerChangeObservers += OnLayerChange;
 	}
 	
 	// Update is called once per frame
-	void LateUpdate ()
+	public void OnLayerChange()
     {
         var currentLayerHit = cameraRayCaster.currentLayerHit;
-        if (currentLayerHit != LastLayerHit)
+        switch (currentLayerHit)
         {
-            switch (currentLayerHit)
-            {
-                case Layer.Enemy:
-                    Cursor.SetCursor(CombatCursor, new Vector2(), CursorMode.Auto);
-                    break;
-                case Layer.RaycastEndStop:
-                    Cursor.SetCursor(StopCursor, new Vector2(), CursorMode.Auto);
-                    break;
-                case Layer.Walkable:
-                    Cursor.SetCursor(WalkCursor, new Vector2(), CursorMode.Auto);
-                    break;
-            }
-            LastLayerHit = currentLayerHit;
+            case Layer.Enemy:
+                Cursor.SetCursor(CombatCursor, new Vector2(), CursorMode.Auto);
+                break;
+            case Layer.RaycastEndStop:
+                Cursor.SetCursor(StopCursor, new Vector2(), CursorMode.Auto);
+                break;
+            case Layer.Walkable:
+                Cursor.SetCursor(WalkCursor, new Vector2(), CursorMode.Auto);
+                break;
         }
     }
 }
