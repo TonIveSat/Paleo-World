@@ -28,10 +28,10 @@ public class CameraRaycaster : MonoBehaviour
     private Layer LastLayerHit;
 
 
-    public delegate void OnLayerChange();
-    public OnLayerChange layerChangeObservers;
+    public delegate void OnLayerChange(Layer layer);
+    public event OnLayerChange onLayerChange;
 
-    void SomeLayerHasChanged()
+    void SomeLayerHasChanged(Layer layer)
     {
         print("SomeLayerHasChanged");
     }
@@ -39,7 +39,7 @@ public class CameraRaycaster : MonoBehaviour
     void Start()
     {
         viewCamera = Camera.main;
-        layerChangeObservers += SomeLayerHasChanged;
+        onLayerChange += SomeLayerHasChanged;
     }
 
     void Update()
@@ -54,7 +54,7 @@ public class CameraRaycaster : MonoBehaviour
                 layerHit = layer;
                 if (layerHit != LastLayerHit)
                 {
-                    layerChangeObservers();
+                    onLayerChange(layer);
                     LastLayerHit = layerHit;
                 }
                 return;

@@ -18,13 +18,12 @@ public class CursorAffordance : MonoBehaviour
     void Start ()
     {
         cameraRayCaster = GetComponent<CameraRaycaster>();
-        cameraRayCaster.layerChangeObservers += OnLayerChange;
+        cameraRayCaster.onLayerChange += OnLayerChange;
 	}
 	
 	// Update is called once per frame
-	public void OnLayerChange()
+	public void OnLayerChange(Layer currentLayerHit)
     {
-        var currentLayerHit = cameraRayCaster.currentLayerHit;
         switch (currentLayerHit)
         {
             case Layer.Enemy:
